@@ -8,6 +8,8 @@ import DetailPage from '@/pages/DetailPage';
 import Tambah from '@/pages/Tambah';
 import parser from 'html-react-parser';
 import NotPages from '@/pages/NotPages';
+import BerandaPage from '@/pages/Beranda';
+
 
 class Main extends React.Component{
 
@@ -87,7 +89,7 @@ class Main extends React.Component{
                 </header>
                 <main>
                     <Routes>
-                        <Route path="/" element={<Beranda notes={this.state.notes} keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />}/>
+                        <Route path="/" element={<BerandaPage notes={this.state.notes} keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />}/>
                         <Route path="/note/tambah" element={<Tambah onAddNote={this.onAddNoteHandler} title={this.state.title} onTitleChange={this.onTitleChangeHandler} onBodyChange={this.onBodyChangeHandler} />}/>
                         <Route path="/note/idNote/:id" element={<DetailPage onArchived={this.onArchivedHandler} onDelete={this.onDeleteHandler}  />}/>
                         <Route path="/note/arsip" element={<Arsip notes={this.state.notes} keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />}/>

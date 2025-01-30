@@ -4,7 +4,6 @@ import NoteItemList from "../componets/cardNote/NoteItemList";
 import PropTypes from "prop-types";
 
 
-
 class Beranda extends React.Component {
     render() {
         const { notes, keyboard, onKeyboardChange } = this.props;

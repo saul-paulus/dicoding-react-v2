@@ -13,7 +13,7 @@ function Navbar({titleBrand}){
 }
 
 Navbar.propTypes = {
-    Navbar: PropTypes.string
+    titleBrand: PropTypes.string.isRequired
 }
 
 export default Navbar;
