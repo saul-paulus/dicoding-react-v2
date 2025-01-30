@@ -45,6 +45,11 @@ class DetailNote extends React.Component {
     }
 }
 
+DetailPage.propTypes = {
+    onArchived: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
+}
+
 DetailNote.propTypes = {
     id: PropTypes.string.isRequired,
     onArchived: PropTypes.func.isRequired,
