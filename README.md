@@ -1,6 +1,4 @@
-# Mulai Menggunakan Aplikasi
-
-<!--  -->
+# Aplikasi Note V2
 
 ## Available Scripts
 
