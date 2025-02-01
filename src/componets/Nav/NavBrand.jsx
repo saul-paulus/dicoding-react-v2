@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 function NavBrand({titleBrand})
 {
     return (
-        <h1>
-            <Link to="/">{titleBrand}</Link>
-        </h1>
+        <h1><Link to="/">{titleBrand}</Link></h1>
     );
 }
 
