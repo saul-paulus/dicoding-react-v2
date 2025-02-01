@@ -1,13 +1,13 @@
 import React from "react";
 import CardDetail from "@/componets/cardNote/CardDetail";
-import { getNote } from "../utils/local-data";
+import { getNote,isArchiveNote, getAllNotes, deleteNote } from "../utils/local-data";
 import { useParams} from "react-router-dom";
 import BtnAction from "@/componets/Button/BtnAction";
 import PropTypes from "prop-types";
 
-function DetailPage({onArchived,onDelete}) {
+function DetailPage() {
     const { id } = useParams();
-    return <DetailNote id={id} onArchived={onArchived} onDelete={onDelete} />;   
+    return <DetailNote id={id}/>;   
 }
 
 class DetailNote extends React.Component {
@@ -17,6 +17,9 @@ class DetailNote extends React.Component {
         this.state = {
             note: null
         };
+
+        this.onArchivedHandler = this.onArchivedHandler.bind(this);
+        this.onDeleteHandler = this.onDeleteHandler.bind(this);
     }
 
     componentDidMount() {
@@ -24,6 +27,20 @@ class DetailNote extends React.Component {
         if (note) this.setState({note});
         
     }
+
+    onArchivedHandler(id) {
+        isArchiveNote(id);
+        const updateNote = getNote(id);
+        this.setState({note: updateNote},()=>{
+            window.history.back();
+        })
+    }
+
+    onDeleteHandler(id){
+        deleteNote(id);
+        window.history.back();
+    }
+
     render() {
         const { note } = this.state;
         if (!note) {
@@ -38,22 +55,32 @@ class DetailNote extends React.Component {
                     <div className="detail-page">
                         <CardDetail note={note} />
                     </div>
-                    <BtnAction id={this.props.id} note={note} onArchived={this.props.onArchived} onDelete={this.props.onDelete} />
+                    <BtnAction 
+                        id={this.props.id} note={note} 
+                        onArchived={this.onArchivedHandler} 
+                        onDelete={this.onDeleteHandler} 
+                    />
                 </>
             );
         }
     }
 }
 
-DetailPage.propTypes = {
-    onArchived: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
-}
 
 DetailNote.propTypes = {
     id: PropTypes.string.isRequired,
-    onArchived: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
 };
+
+CardDetail.propTypes = {
+    note: PropTypes.object.isRequired,
+};
+
+BtnAction.propTypes = {
+    id: PropTypes.string.isRequired,
+    note: PropTypes.object.isRequired,
+    onArchived: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+};
+
 
 export default DetailPage;

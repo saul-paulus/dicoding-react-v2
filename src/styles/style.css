@@ -65,6 +65,7 @@ header .navigation ul li {
 }
 .navigation ul li a{
   color: var(--on-background-grey);
+  font-size: 1remn;
 }
 .navigation ul li a:hover{
   color: var(--on-surface);
@@ -227,6 +228,11 @@ main {
   color: var(--on-background-grey)
 }
 
+.search-bar{
+  width: 100%;
+  text-align: center;
+}
+
 .search-bar input {
   margin: 16px 0;
   font-family: 'Inter', sans-serif;
@@ -234,8 +240,8 @@ main {
   border: 1px solid var(--on-background);
   border-radius: 50px;
   padding: 20px;
-  width: 100%;
   height: 3rem;
+  width: 100%;
   color: var(--on-background);
 }
 
@@ -337,10 +343,13 @@ main {
   .notes-list {
     grid-template-columns: repeat(3, 1fr);
   }
+  .search-bar input {
+    width: 50%;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-
+  
   .notes-list {
     grid-template-columns: repeat(4, 1fr);
   }
