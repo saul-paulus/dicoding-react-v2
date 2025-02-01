@@ -31,3 +31,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Tampilan Aplikasi
 ![alt text](image.png)
+
+## Cek Lighthouse
+![image](https://github.com/user-attachments/assets/e299e6f4-e781-4cf2-8ee4-80280e956dde)
+
