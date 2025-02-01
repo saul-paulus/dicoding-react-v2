@@ -9,7 +9,7 @@ function SearchNotes({keyboard,onKeyboardChange})
                 type="text" 
                 placeholder="Cari judul notes....." 
                 value={keyboard}
-                onChange={onKeyboardChange}
+                onChange={(e)=>onKeyboardChange(e.target.value)}
             />
         </div>
     );

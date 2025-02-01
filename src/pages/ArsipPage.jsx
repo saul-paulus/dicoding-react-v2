@@ -3,6 +3,22 @@ import NoteItemList from "@/componets/cardNote/NoteItemList";
 import SearchNotes from "@/componets/Input/SearchNotes";
 import PropTypes from "prop-types";
 import { getAllNotes } from "../utils/local-data";
+import { useSearchParams } from "react-router-dom";
+
+
+
+function ArsipPageWrapper() {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const keyboard = searchParams.get('keyboard');
+
+    function changeSearchParams(keyboard){
+        setSearchParams({keyboard});
+    }
+
+
+    return <ArsipPage defaultKeyboard={keyboard} keyboardChange={changeSearchParams}/>
+}   
 
 
 class ArsipPage extends React.Component {
@@ -12,30 +28,32 @@ class ArsipPage extends React.Component {
 
         this.state = {
             notes: getAllNotes(),
-            keyboard: ""
+            keyboard: this.props.defaultKeyboard || "",
         }
 
         this.onKeyboardChangeHandler = this.onKeyboardChangeHandler.bind(this);
     }
 
-    onKeyboardChangeHandler(e){
+    onKeyboardChangeHandler(keyboard){
         this.setState(()=>{
             return {
-                keyboard: e.target.value
+                keyboard,
             }
-        })     
+        });
+        
+        this.props.keyboardChange(keyboard);
     }
 
 
     render() {
-        const notesFilter = this.state.notes.filter((note) => 
-            note.title.toLowerCase().includes(this.state.keyboard.toLowerCase())
-        );
+        const notes = this.state.notes.filter((note) => {
+            return note.title.toLowerCase().includes(this.state.keyboard.toLowerCase());
+        });
 
         return (
             <>
                 <SearchNotes keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />
-                <NoteItemList notes={notesFilter.filter(note => note.archived)} />
+                <NoteItemList notes={notes.filter(note => note.archived)} />
             </>
         );
     }
@@ -58,4 +76,4 @@ NoteItemList.prototype = {
     ).isRequired,
 }
 
-export default ArsipPage;
+export default ArsipPageWrapper;
