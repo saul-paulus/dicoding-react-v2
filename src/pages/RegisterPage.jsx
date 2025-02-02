@@ -1,6 +1,6 @@
 import React from "react";
 import FormInputRegister from "@/componets/Input/FormInputRegister";
-import { registerUser } from "../utils/apiAuth";
+import { registerUser } from "../utils/api";
 import { use } from "react";
 import { useNavigate } from "react-router-dom";
 

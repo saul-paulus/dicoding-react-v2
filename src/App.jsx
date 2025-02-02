@@ -8,7 +8,7 @@ import NotPages from './pages/NotPages';
 import Navbar from './componets/layouts/Navbar';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import { getUserLogged, putAccessToken } from './utils/apiAuth';
+import { getUserLogged, putAccessToken } from './utils/api';
 
 class NoteApp extends React.Component
 {
@@ -21,25 +21,38 @@ class NoteApp extends React.Component
     }
   }
 
-  async componentDidMount(){
-    const {user} = await getUserLogged();
-    this.setState({authedUser: user, isLoading: false});
-  }
-
-  onLoginSuccess = async ({accessToken})=>{
-    try{
-      putAccessToken(accessToken);
-      const {user} = await  getUserLogged();
-      this.setState({authedUser: user});
-    }catch(error){
-      console.error('Login error:', error);
+  async componentDidMount() {
+    try {
+      const {data } = await getUserLogged();
+      this.setState({ authedUser: data, isLoading: false });
+    } catch (error) {
+      console.error('Auth check error:', error);
+      this.setState({ isLoading: false });
     }
   }
- 
+
+  onLoginSuccess = async (user) => {
+    try {
+      putAccessToken(user.accessToken);
+      const { error, data } = await getUserLogged();
+      if (!error && data) {
+        this.setState({ authedUser: data });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
+  onAuthLogout = () => {
+    this.setState({ authedUser: null });
+    putAccessToken("")
+    window.location.reload();
+  };
+
   renderContent(){
     const {authedUser} = this.state;
 
-    if(authedUser === null){
+    if(!authedUser){
       return (
         <Routes>
           <Route path="/login" element={<LoginPage onLoginSuccess={this.onLoginSuccess} />} />
@@ -47,18 +60,19 @@ class NoteApp extends React.Component
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       );
+    }else{
+      return (
+        <Routes>
+          <Route path="/" element={<BerandaPage />} />
+          <Route path="/note/:id" element={<DetailPage />} />
+          <Route path="/arsip" element={<ArsipPage />} />
+          <Route path="/tambah" element={<TambahPage />} />
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="/register" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotPages />} />
+        </Routes>
+      );
     }
-    
-    return (
-      <Routes>
-        <Route path="/" element={<BerandaPage />} />
-        <Route path="/note/:id" element={<DetailPage />} />
-        <Route path="/arsip" element={<ArsipPage />} />
-        <Route path="/tambah" element={<TambahPage />} />
-        <Route path="/login" element={<Navigate to="/" replace />} />
-        <Route path="*" element={<NotPages />} />
-      </Routes>
-    );
   }
   
   render(){
@@ -71,7 +85,9 @@ class NoteApp extends React.Component
     return (
       <div className="app-container">
         <header>
-          <Navbar user={this.state.authedUser}/>
+          <Navbar
+            onLogout={this.onAuthLogout}
+          />
         </header>
         <main>{this.renderContent()}</main>
       </div>

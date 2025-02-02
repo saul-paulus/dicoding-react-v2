@@ -1,6 +1,6 @@
 import React from "react";
 import CardDetail from "@/componets/cardNote/CardDetail";
-import { getNote,isArchiveNote, getAllNotes, deleteNote } from "../utils/local-data";
+import { getNotesById,postUnarchive, postArchive,deleteNote, getNotes } from "../utils/api";
 import { useParams} from "react-router-dom";
 import BtnAction from "@/componets/Button/BtnAction";
 import PropTypes from "prop-types";
@@ -15,30 +15,49 @@ class DetailNote extends React.Component {
         super(props);
 
         this.state = {
-            note: null
+            note: null,
+            notes: null,
         };
-
-        this.onArchivedHandler = this.onArchivedHandler.bind(this);
-        this.onDeleteHandler = this.onDeleteHandler.bind(this);
     }
 
-    componentDidMount() {
-        const note = getNote(this.props.id);
-        if (note) this.setState({note});
+    async componentDidMount() {
+        try{
+            const note = await getNotesById(this.props.id);
+            this.setState({note: note.data});
+        }catch(error){
+            console.error('Gagal mendapatkan notes:', error);
+        }
+
+    }
+
+    onArchivedHandler = async(id)=> {
+        try{
+            if(this.state.note.archived){
+                await postUnarchive(id);
+            }else{
+                await postArchive(id);
+            }
+            const updateNote = await getNotesById(id);
+            this.setState({note: updateNote},()=>{
+                window.history.back();
+            });
+        }catch(error){
+            console.log('Error archive note : ', error);
+        }
+    }
+
+    onDeleteHandler =  async(id)=>{
         
-    }
+        try{
+            await deleteNote(id);
+            const {data} = getNotes();
+            this.setState({notes: data},()=>{
+                window.history.back();
+            })
+        }catch(error){
+            console.log('Error delete note : ', error);
+        }
 
-    onArchivedHandler(id) {
-        isArchiveNote(id);
-        const updateNote = getNote(id);
-        this.setState({note: updateNote},()=>{
-            window.history.back();
-        })
-    }
-
-    onDeleteHandler(id){
-        deleteNote(id);
-        window.history.back();
     }
 
     render() {

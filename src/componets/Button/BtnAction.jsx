@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes, { node } from "prop-types";
+import PropTypes from "prop-types";
 
 function BtnAction({ id, onArchived, onDelete, note }) {
     return (

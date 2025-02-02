@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
 import FormInputLogin from "@/componets/Input/FormInputLogin";
-import { authLogin } from "../utils/apiAuth";
+import { authLogin } from "../utils/api";
 import PropTypes from "prop-types";
 
 function LoginPage({onLoginSuccess})
@@ -13,14 +13,10 @@ function LoginPage({onLoginSuccess})
 
 
     const onLoginHandler = async ({email,password}) =>{
-        setIsLoading(true);
-        setErrorMessage("");
-
         try{
             const {error, data} = await authLogin({ email, password })
-
             if(!error){
-                onLoginSuccess({accessToken: data.accessToken});
+                onLoginSuccess(data);
                 navigate("/");
             }else{
                 setErrorMessage(data?.message || "Gagal Login");

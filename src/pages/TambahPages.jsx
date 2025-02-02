@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllNotes,addNote} from '@/utils/local-data';
+import { createNote, getNotes } from "../utils/api";
 import PropTypes from "prop-types";
 import FormInputNote from "@/componets/Input/FormInputNote";
 import parser from 'html-react-parser';
@@ -14,30 +14,26 @@ class TambahPage extends React.Component
             title:"",
             body:""
         }
-
-        this.onTitleChangeHandler = this.onTitleChangeHandler.bind(this);
-        this.onBodyChangeHandler = this.onBodyChangeHandler.bind(this);
-        this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
     }
 
-    onTitleChangeHandler(e){
+    onTitleChangeHandler = (e) =>{
         this.setState({title: e.target.value})
     }
 
-    onBodyChangeHandler(e) {
+    onBodyChangeHandler = (e) => {
         const content = e.target.innerHTML; 
         this.setState({
             body: parser(content),
         });
     }
 
-    onAddNoteHandler(e){
+    onAddNoteHandler = async (e) => {
         e.preventDefault();
         const {title, body} = this.state;
 
-        addNote({title,body});
+        await createNote({title,body});
         this.setState({
-            notes:getAllNotes(),
+            notes:getNotes(),
             title:""
         },()=>{
             window.history.back();

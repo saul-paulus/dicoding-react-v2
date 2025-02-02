@@ -2,17 +2,16 @@ import React from "react";
 import NoteItemList from "@/componets/cardNote/NoteItemList";
 import SearchNotes from "@/componets/Input/SearchNotes";
 import PropTypes from "prop-types";
-import { getAllNotes } from "../utils/local-data";
+import {getNoteArchive, getNotes} from "../utils/api";
 import { useSearchParams } from "react-router-dom";
 
 
 
 function ArsipPageWrapper() {
     const [searchParams, setSearchParams] = useSearchParams();
-
     const keyboard = searchParams.get('keyboard');
 
-    function changeSearchParams(keyboard){
+    const changeSearchParams = (keyboard)=>{
         setSearchParams({keyboard});
     }
 
@@ -27,33 +26,41 @@ class ArsipPage extends React.Component {
         super(props);
 
         this.state = {
-            notes: getAllNotes(),
+            notes: [],
             keyboard: this.props.defaultKeyboard || "",
         }
-
-        this.onKeyboardChangeHandler = this.onKeyboardChangeHandler.bind(this);
     }
 
-    onKeyboardChangeHandler(keyboard){
-        this.setState(()=>{
-            return {
-                keyboard,
-            }
+    async componentDidMount(){
+        try{
+            const { data } = await getNoteArchive();
+            this.setState({notes: data});
+        }catch(error){
+            console.error('Gagal mendapatkan notes:', error);
+        }
+    }
+
+
+    onKeyboardChangeHandler = (keyboard) =>{
+        this.setState({keyboard},()=>{
+            this.props.keyboardChange(keyboard);
         });
-        
-        this.props.keyboardChange(keyboard);
     }
-
 
     render() {
-        const notes = this.state.notes.filter((note) => {
-            return note.title.toLowerCase().includes(this.state.keyboard.toLowerCase());
-        });
-
+        const notes = this.state.notes.filter((note) =>
+            note.title.toLowerCase().includes(this.state.keyboard.toLowerCase())
+          );
+      
         return (
             <>
-                <SearchNotes keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />
-                <NoteItemList notes={notes.filter(note => note.archived)} />
+                <SearchNotes 
+                    keyboard={this.state.keyboard} 
+                    onKeyboardChange={this.onKeyboardChangeHandler} 
+                />
+                <NoteItemList 
+                    notes={notes} 
+                />
             </>
         );
     }

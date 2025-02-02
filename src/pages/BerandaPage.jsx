@@ -1,7 +1,7 @@
 import React from "react";
 import SearchNotes from "../componets/Input/SearchNotes";
 import NoteItemList from "../componets/cardNote/NoteItemList";
-import { getAllNotes } from '@/utils/local-data'
+import { getNotes } from "../utils/api";
 import PropTypes from "prop-types";
 import { useSearchParams } from "react-router-dom";
 
@@ -22,19 +22,27 @@ function BerandaPageWrapper() {
 
 class BerandaPage extends React.Component 
 {
-
     constructor(props){
         super(props);
 
         this.state = {
-            notes: getAllNotes(),
-            keyboard: props.defaultKeyboard || '',
+            notes: [],
+            keyboard: props.defaultKeyboard ||"",
         }
-
-        this.onKeyboardChangeHandler = this.onKeyboardChangeHandler.bind(this);
     }
 
-    onKeyboardChangeHandler(keyboard){
+
+    async componentDidMount(){
+        try{
+            const { data } = await getNotes();
+            this.setState({notes: data});
+        }catch(error){
+            console.error('Gagal mendapatkan notes:', error);
+        }
+
+    }
+
+    onKeyboardChangeHandler = (keyboard)=>{
         this.setState(()=>{
             return {
                 keyboard,
@@ -51,8 +59,13 @@ class BerandaPage extends React.Component
 
         return (
             <>
-                <SearchNotes keyboard={this.state.keyboard} onKeyboardChange={this.onKeyboardChangeHandler} />
-                <NoteItemList notes={notes.filter(note => !note.archived)} />
+                <SearchNotes 
+                    keyboard={this.state.keyboard} 
+                    onKeyboardChange={this.onKeyboardChangeHandler} 
+                />
+                <NoteItemList 
+                    notes={notes} 
+                />
             </>
         );
     }
