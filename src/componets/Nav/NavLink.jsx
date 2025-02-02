@@ -7,8 +7,8 @@ function NavLink()
         <div className="navigation">
             <ul>
                 <li><Link to="/">Beranda</Link></li>
-                <li><Link to="/note/tambah">Tambah</Link></li>
-                <li><Link to="/note/arsip">Arsip</Link></li>
+                <li><Link to="/tambah">Tambah</Link></li>
+                <li><Link to="/arsip">Arsip</Link></li>
             </ul>
         </div>
     );

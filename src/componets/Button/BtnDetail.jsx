@@ -6,7 +6,7 @@ function BtnDetail({id})
 {
     return (
         <div className="detail">
-            <Link className="btn-detail" to={`/note/idNote/${id}`}>Detail</Link>
+            <Link className="btn-detail" to={`/note/${id}`}>Detail</Link>
         </div>
     );
 }

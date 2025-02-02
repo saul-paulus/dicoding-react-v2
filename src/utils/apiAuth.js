@@ -18,6 +18,22 @@ const fetchWithToken = async (url, option ={}) =>{
     });
 }
 
+const registerUser  = async ({name,email,password})=>{
+    const response = await fetch(`${BASE_URL}/register`,{
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name,email,password})
+    });
+
+    const responseJson = await response.json();
+    if (responseJson.status !== 'success') {
+        alert(responseJson.message);
+        return { error: true };
+    }
+}
+
 const authLogin = async ({email,password}) =>{
     const response = await fetch(`${BASE_URL}/login`,{
         method: 'POST',
@@ -38,3 +54,21 @@ const authLogin = async ({email,password}) =>{
     return {error: false, data: responseJson.data};
 } 
 
+const getUserLogged =async()=>{
+    const response = await fetchWithToken(`${BASE_URL}/users/me`);
+    const responseJson = await response.json();
+
+    if(responseJson.status !== 'success'){
+        return {error: true, data: null}
+    }
+    return {error: false, data: responseJson.data};
+}
+
+
+export {
+    putAccessToken,
+    fetchWithToken,
+    registerUser,
+    authLogin,
+    getUserLogged
+}

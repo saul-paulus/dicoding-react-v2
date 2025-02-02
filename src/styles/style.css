@@ -57,6 +57,18 @@ header h1 {
   flex: 1;
 }
 
+.nabvarBrand{
+  display: flex;
+}
+
+.nabvarBrand .titleOne{
+  color: var(--primary-variant);
+}
+
+.nabvarBrand .titleTwo{
+  color: var(--on-background-grey);
+}
+
 header .navigation ul li {
   display: inline-block;
   font-size: 20px;
