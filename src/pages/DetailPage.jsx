@@ -13,21 +13,18 @@ function DetailPage() {
 class DetailNote extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             note: null,
-            notes: null,
         };
     }
 
     async componentDidMount() {
         try{
-            const note = await getNotesById(this.props.id);
-            this.setState({note: note.data});
+            const responseNote = await getNotesById(this.props.id);
+            this.setState({note: responseNote.data});
         }catch(error){
             console.error('Gagal mendapatkan notes:', error);
         }
-
     }
 
     onArchivedHandler = async(id)=> {
@@ -38,7 +35,7 @@ class DetailNote extends React.Component {
                 await postArchive(id);
             }
             const updateNote = await getNotesById(id);
-            this.setState({note: updateNote},()=>{
+            this.setState({note: updateNote.data},()=>{
                 window.history.back();
             });
         }catch(error){
@@ -47,13 +44,9 @@ class DetailNote extends React.Component {
     }
 
     onDeleteHandler =  async(id)=>{
-        
         try{
             await deleteNote(id);
-            const {data} = getNotes();
-            this.setState({notes: data},()=>{
-                window.history.back();
-            })
+            window.history.back();
         }catch(error){
             console.log('Error delete note : ', error);
         }

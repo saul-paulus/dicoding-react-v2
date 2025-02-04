@@ -28,7 +28,6 @@ function LoginPage({onLoginSuccess})
         }
    
     }
-
     return (
         <section className="login-page">
             <h2>Yuk, login untuk menggunakan aplikasi.</h2>

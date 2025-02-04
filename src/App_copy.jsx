@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import ToggleTheme from './contexts/ToggleTheme';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import BerandaPage from './pages/BerandaPage';
 import DetailPage from './pages/DetailPage';
@@ -10,37 +11,32 @@ import Navbar from './componets/layouts/Navbar';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { getUserLogged, putAccessToken } from './utils/api';
-import ToggleTheme from './contexts/ToggleTheme';
 
 
-class NoteApp extends React.Component
-{
-  constructor(props){
+
+class NoteApp extends React.Component {
+  constructor(props) {
     super(props);
-
     this.state = {
       authedUser: null,
       isLoading: true,
-      theme: localStorage.getItem('theme') || 'light', 
-      toggleTheme: ()=>{
-        this.setState((prevState) =>{
-          const newTheme = prevState.theme === 'dark' ? 'light' : 'dark';
-          localStorage.setItem('theme', newTheme);
-          return {theme: newTheme}
-          });
+      theme: 'dark',
+      toggleTheme: () => {
+        this.setState((prevState) => ({
+          theme: prevState.theme === 'dark' ? 'light' : 'dark'
+        }));
       }
     };
   }
 
   async componentDidMount() {
     try {
-      const {data } = await getUserLogged();
+      const { data } = await getUserLogged();
       this.setState({ authedUser: data, isLoading: false });
     } catch (error) {
       console.error('Auth check error:', error);
       this.setState({ isLoading: false });
     }
-    document.documentElement.setAttribute('data-theme', this.state.theme);
   }
 
   onLoginSuccess = async (user) => {
@@ -57,20 +53,13 @@ class NoteApp extends React.Component
 
   onAuthLogout = () => {
     this.setState({ authedUser: null });
-    putAccessToken("")
+    putAccessToken("");
     window.location.reload();
   };
 
-  componentDidUpdate(prevProps, prevState){
-    if(prevState.theme !== this.state.theme){
-      document.documentElement.setAttribute('data-theme', this.state.theme);
-    }
-  }
-
-  renderContent(){
-    const {authedUser} = this.state;
-
-    if(!authedUser){
+  renderContent() {
+    const { authedUser } = this.state;
+    if (!authedUser) {
       return (
         <Routes>
           <Route path="/login" element={<LoginPage onLoginSuccess={this.onLoginSuccess} />} />
@@ -78,7 +67,7 @@ class NoteApp extends React.Component
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       );
-    }else{
+    } else {
       return (
         <Routes>
           <Route path="/" element={<BerandaPage />} />
@@ -92,30 +81,24 @@ class NoteApp extends React.Component
       );
     }
   }
-  
-  render(){
-    const {isLoading, theme, toggleTheme} = this.state;
 
-    if(isLoading){
-      return <div>Loading.....</div>
+  render() {
+    const { isLoading, theme, toggleTheme } = this.state;
+    if (isLoading) {
+      return <div>Loading.....</div>;
     }
-
     return (
-      <ThemeProvider value={{theme, toggleTheme}}>
+      <ThemeProvider value={{ theme, toggleTheme }}>
         <div className="app-container">
           <header>
-            <Navbar
-              onLogout={this.onAuthLogout}
-            />
-            <ToggleTheme/>
+            <Navbar onLogout={this.onAuthLogout} />
+            <ToggleTheme />
           </header>
           <main>{this.renderContent()}</main>
         </div>
       </ThemeProvider>
-     
     );
   }
-  
 }
 
 export default NoteApp;
