@@ -1,7 +1,6 @@
 import React from "react";
 import FormInputRegister from "@/componets/Input/FormInputRegister";
 import { registerUser } from "../utils/api";
-import { use } from "react";
 import { useNavigate } from "react-router-dom";
 
 function RegisterPage(){
@@ -13,7 +12,6 @@ function RegisterPage(){
             navigate("/");
        }
     }
-
 
     return (
         <section className="regsiter-page">
