@@ -13,7 +13,7 @@ function Navbar({onLogout,name}){
 }
 
 Navbar.propTypes = {
-    user: PropTypes.object,
+    name: PropTypes.string.isRequired,
     onLogout: PropTypes.func.isRequired
 }
 
