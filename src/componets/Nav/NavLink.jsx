@@ -19,7 +19,8 @@ function NavLink({onAuthLogout,name})
 }
 
 NavLink.propTypes = {
-    onAuthLogout: PropTypes.func.isRequired
+    onAuthLogout: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired
 }
 
 export default NavLink;

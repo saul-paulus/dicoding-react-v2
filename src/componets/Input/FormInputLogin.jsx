@@ -1,57 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-class FormInputLogin extends React.Component
-{
-    state = {
+
+function FormInputLogin({authLogin}){
+    const [formData, setFormData] = useState({
         email:"",
         password:""
+    });
+
+    const onChangeInputHandler = (e) =>{
+        const {name,value} = e.target;
+        setFormData((prevState) =>({
+            ...prevState,
+            [name]: value
+        }));
     }
 
-
-    onChangeInputHandler = (e) =>{
-        const {name, value} = e.target;
-        this.setState({ [name]: value });
-    }
-
-    onSubmitedLoginHandler = (e) =>{
+    const onSubmitedLoginHandler = (e) =>{
         e.preventDefault();
-        this.props.authLogin(this.state);
+        authLogin(formData);
     }
 
-    render(){
-        return (
-            <form onSubmit={this.onSubmitedLoginHandler} >
-                <label htmlFor="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.onChangeInputHandler}
-                    placeholder="Masukan email terdaftar....."
-                    required
-                />
-                <label htmlFor="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChangeInputHandler}
-                    placeholder="Masukan password......"
-                    required
-                />
-                <button type="submitsau">Login</button>
-            </form>
-        );
-    }
+    return (
+        <form onSubmit={onSubmitedLoginHandler} >
+            <label htmlFor="email">Email</label>
+            <input 
+                type="email" 
+                id="email" 
+                name="email"
+                value={formData.email}
+                onChange={onChangeInputHandler}
+                placeholder="Masukan email terdaftar....."
+                required
+            />
+            <label htmlFor="password">Password</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password"
+                value={formData.password}
+                onChange={onChangeInputHandler}
+                placeholder="Masukan password......"
+                required
+            />
+            <button type="submitsau">Login</button>
+        </form>
+    );
 }
 
-
-FormInputLogin.protoTypes = {
+FormInputLogin.propTypes = {
     authLogin: PropTypes.func.isRequired
 }
-
 
 export default FormInputLogin;
